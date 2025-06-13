@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Todos os Produtos{% endblock %}
+
+{% block content %}
+    <header class="products-page-header">
+        <div class="container">
+            <h1>Nossas Joias</h1>
+            <p>Explore a nossa coleção completa de peças exclusivas.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="products-filter">
+            <ul>
+                <li><a href="#" class="active">Todos</a></li>
+                <li><a href="#">Colares</a></li>
+                <li><a href="#">Brincos</a></li>
+                <li><a href="#">Anéis</a></li>
+                <li><a href="#">Pulseiras</a></li>
+            </ul>
+        </section>
+
+        <section class="products-section">
+            <h2 class="section-title">Coleção Completa</h2>
+            <div class="product-grid">
+                {% for product in products %}
+                    <div class="product-card">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p class="price">{{ product.price }}</p>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="button primary">Ver Detalhes</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
