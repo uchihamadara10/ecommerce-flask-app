@@ -1,23 +1,27 @@
 # Use uma imagem base Python
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-buster # Mantenha a versão 3.10 ou superior
 
 # Define o diretório de trabalho dentro do contêiner
 WORKDIR /app
 
 # Copia o arquivo requirements.txt e instala as dependências
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt # Adicionei --no-cache-dir para otimização
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo o restante do código da aplicação
+# Copia a pasta 'templates' explicitamente
+COPY templates /app/templates
+
+# Copia a pasta 'static' explicitamente
+COPY static /app/static
+
+# Copia o restante do código da aplicação (app.py e outros arquivos da raiz)
 COPY . .
 
 # Define a variável de ambiente para que o Flask ouça em todas as interfaces
 ENV FLASK_APP=app.py
-# FLASK_RUN_HOST=0.0.0.0 não é estritamente necessário com gunicorn, mas não atrapalha
 
 # Expõe a porta que a aplicação vai ouvir (Cloud Run usa a porta 8080 por padrão)
 EXPOSE 8080
 
 # Comando para rodar a aplicação quando o contêiner iniciar
-# Use gunicorn para servir a aplicação Flask em produção
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "app:app"]
