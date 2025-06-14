@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Rastrear Pedido{% endblock %}
+
+{% block content %}
+    <section class="page-content">
+        <h1>Rastrear Meu Pedido</h1>
+        <p>A página de rastreamento de pedidos ainda está sendo construída! Em breve você poderá acompanhar seu pedido aqui.</p>
+        <form class="track-order-form">
+            <label for="order_id">Número do Pedido:</label>
+            <input type="text" id="order_id" name="order_id" placeholder="Ex: #123456" required>
+            <button type="submit" disabled>Rastrear (em breve)</button>
+        </form>
+        <div class="tracking-info">
+            <p>Status: (aguardando informações)</p>
+            <p>Última atualização: (aguardando informações)</p>
+        </div>
+    </section>
+{% endblock %}

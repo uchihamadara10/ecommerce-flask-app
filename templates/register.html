@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar{% endblock %}
+
+{% block content %}
+    <section class="auth-form">
+        <h2>Criar Nova Conta</h2>
+        <form method="POST">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Registrar</button>
+        </form>
+        <p>Já tem uma conta? <a href="{{ url_for('login') }}">Faça login aqui</a></p>
+    </section>
+{% endblock %}

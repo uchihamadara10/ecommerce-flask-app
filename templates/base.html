@@ -1,0 +1,188 @@
+<!DOCTYPE html> 
+<html lang="pt-br"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>{% block title %}Allana Joias{% endblock %}</title> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> 
+</head> 
+<body> 
+    <header class="header"> 
+        <div class="container header-content desktop-header"> 
+            <a href="{{ url_for('index') }}"> 
+                <img src="{{ url_for('static', filename='images/allana_joias_logo2.png') }}" alt="Allana Joias Logo2" class="logo-img"> 
+            </a> 
+            <nav class="main-nav"> 
+                <ul> 
+                    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a></li> 
+                    <li class="dropdown"> 
+                        <a href="#" class="dropbtn {% if request.endpoint == 'products_list' %}active{% endif %}">Categorias <span class="arrow-down"></span></a> 
+                        <div class="dropdown-content"> 
+                            <a href="{{ url_for('products_list') }}">Todos os Produtos</a> 
+                            <a href="{{ url_for('products_list', category_id=1) }}">Colares</a> {# Exemplo com ID da categoria #} 
+                            <a href="{{ url_for('products_list', category_id=2) }}">Brincos</a> {# Exemplo com ID da categoria #} 
+                            <a href="{{ url_for('products_list', category_id=3) }}">Anéis</a> {# Exemplo com ID da categoria #} 
+                            <a href="{{ url_for('products_list', category_id=4) }}">Pulseiras</a> {# Exemplo com ID da categoria #} 
+                        </div> 
+                    </li> 
+                    <li><a href="{{ url_for('about') }}" {% if request.endpoint == 'about' %}class="active"{% endif %}>Sobre Nós</a></li> 
+                    <li><a href="{{ url_for('contact') }}" {% if request.endpoint == 'contact' %}class="active"{% endif %}>Contato</a></li> 
+                    {# Removido temporariamente para testar o Admin Dashboard sem login #} 
+                    {# {% if current_user and current_user.is_authenticated and current_user.is_admin %} #} 
+                        <li><a href="{{ url_for('admin_dashboard') }}" {% if request.endpoint == 'admin_dashboard' %}class="active"{% endif %}>Admin</a></li> 
+                    {# {% endif %} #} 
+                </ul> 
+            </nav> 
+            <div class="auth-area"> 
+                {# Formulário de busca ainda sem rota definida para action #} 
+                <form class="search-form" action="#" method="get"> 
+                    <input type="text" placeholder="Buscar joia..."> 
+                    <button type="submit">🔍</button> 
+                </form> 
+                <div class="auth-buttons"> 
+                    <a href="{{ url_for('login') }}" class="button secondary">Login</a> 
+                    <a href="{{ url_for('register') }}" class="button primary">Cadastre-se</a> 
+                </div> 
+                <a href="{{ url_for('cart') }}" class="cart-icon"> 
+                    <i class="fas fa-shopping-cart"></i> 
+                </a> 
+            </div> 
+        </div> 
+
+        <div class="container mobile-header"> 
+            <div class="hamburger-menu" id="hamburger-icon"> 
+                <i class="fas fa-bars"></i> </div> 
+            <a href="{{ url_for('index') }}" class="mobile-logo-link"> 
+                <img src="{{ url_for('static', filename='images/allana_joias_logo2.png') }}" alt="Allana Joias Logo2" class="logo-img"> 
+            </a> 
+            <div class="mobile-icons"> 
+                <a href="{{ url_for('login') }}" class="icon-link"> 
+                    <i class="fas fa-user-circle"></i> </a> 
+                <a href="{{ url_for('cart') }}" class="icon-link"> 
+                    <i class="fas fa-shopping-cart"></i> </a> 
+            </div> 
+        </div> 
+
+        <nav class="mobile-nav" id="mobile-nav-menu"> 
+            <div class="mobile-nav-header"> 
+                <a href="{{ url_for('index') }}" class="mobile-nav-logo-link"> 
+                    <img src="{{ url_for('static', filename='images/allana_joias_logo2.png') }}" alt="Allana Joias Logo2" class="logo-img"> 
+                </a> 
+                <div class="close-menu-icon" id="close-menu-icon"> 
+                    <i class="fas fa-times"></i> </div> 
+            </div> 
+
+            <ul class="mobile-nav-main-links"> 
+                <li class="mobile-nav-profile-section"> 
+                    {# Este link pode se tornar url_for('profile') após implementar login/perfil #} 
+                    <a href="{{ url_for('login') }}" class="mobile-nav-link profile-link"> 
+                        <i class="fas fa-user-circle"></i> <span>Minha Conta</span> 
+                    </a> 
+                </li> 
+                <li> 
+                    <a href="{{ url_for('track_order') }}" class="mobile-nav-link"> 
+                        <i class="fas fa-truck"></i> <span>Rastreio</span> 
+                    </a> 
+                </li> 
+                <li> 
+                    <a href="{{ url_for('favorites') }}" class="mobile-nav-link"> 
+                        <i class="fas fa-heart"></i> <span>Meus Favoritos</span> 
+                    </a> 
+                </li> 
+                <li> 
+                    <a href="#" class="mobile-nav-link"> 
+                        <i class="fas fa-handshake"></i> <span>Seja Revendedor</span> 
+                    </a> 
+                </li> 
+                <li> 
+                    <a href="#" class="mobile-nav-link"> 
+                        <i class="fas fa-store"></i> <span>Nossas Lojas</span> 
+                    </a> 
+                </li> 
+            </ul> 
+
+            <div class="mobile-nav-search"> 
+                <form action="#" method="get"> 
+                    <input type="text" placeholder="Digite o que você procura"> 
+                    <button type="submit"><i class="fas fa-search"></i></button> 
+                </form> 
+            </div> 
+
+            <ul class="mobile-nav-product-links"> 
+                <li><a href="{{ url_for('products_list') }}" class="mobile-nav-link">Ver Todos os Produtos</a></li> 
+                <li class="dropdown-mobile"> 
+                    <a href="#" class="dropbtn-mobile">Categorias de Joias <i class="fas fa-chevron-down"></i></a> 
+                    <div class="dropdown-content-mobile"> 
+                        <a href="{{ url_for('products_list', category_id=1) }}">Colares</a> 
+                        <a href="{{ url_for('products_list', category_id=2) }}">Brincos</a> 
+                        <a href="{{ url_for('products_list', category_id=3) }}">Anéis</a> 
+                        <a href="{{ url_for('products_list', category_id=4) }}">Pulseiras</a> 
+                    </div> 
+                </li> 
+                <li><a href="#" class="mobile-nav-link">Campanhas</a></li> {# Pode ser url_for('campaigns') no futuro #} 
+                <li><a href="#" class="mobile-nav-link">Novidades</a></li> {# Pode ser url_for('new_arrivals') no futuro #} 
+            </ul> 
+
+            <div class="mobile-nav-bottom-links"> 
+                <li><a href="{{ url_for('index') }}" class="mobile-nav-link">Home</a></li> 
+                <li><a href="{{ url_for('about') }}" class="mobile-nav-link">Sobre Nós</a></li> 
+                <li><a href="{{ url_for('contact') }}" class="mobile-nav-link">Contato</a></li> 
+                {# Link Admin para mobile, se aplicável #} 
+                {# {% if current_user and current_user.is_authenticated and current_user.is_admin %} #} 
+                    <li><a href="{{ url_for('admin_dashboard') }}" class="mobile-nav-link">Admin</a></li> 
+                {# {% endif %} #} 
+            </div> 
+        </nav> 
+    </header> 
+
+    <main> 
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+            {% if messages %} 
+                <div class="flash-messages container"> 
+                    {% for category, message in messages %} 
+                        <div class="alert alert-{{ category }}">{{ message }}</div> 
+                    {% endfor %} 
+                </div> 
+            {% endif %} 
+        {% endwith %} 
+        {% block content %}{% endblock %} 
+    </main> 
+
+    <footer class="footer"> 
+        <div class="container"> 
+            <div class="footer-content"> 
+                <div class="footer-section about"> 
+                    <h3>Sobre a Allana Joias</h3> 
+                    <p>Qualidade e elegância em cada peça. Encontre a joia perfeita para cada momento especial.</p> 
+                </div> 
+                <div class="footer-section links"> 
+                    <h3>Links Úteis</h3> 
+                    <ul> 
+                        <li><a href="{{ url_for('products_list') }}">Produtos</a></li> 
+                        <li><a href="{{ url_for('login') }}">Minha Conta</a></li> {# Ou url_for('profile') depois #} 
+                        <li><a href="{{ url_for('returns') }}">Devoluções</a></li> 
+                        <li><a href="{{ url_for('privacy_policy') }}">Política de Privacidade</a></li> 
+                    </ul> 
+                </div> 
+                <div class="footer-section contact"> 
+                    <h3>Contato</h3> 
+                    <p>Email: contato@allanajoias.com</p> 
+                    <p>Telefone: (XX) XXXX-XXXX</p> 
+                    <p>Endereço: Rua do Luxo, 123 - Centro, Juquitiba - SP</p> 
+                    <div class="social-icons"> 
+                        <a href="#"><img src="{{ url_for('static', filename='images/facebook_icon.png') }}" alt="Facebook"></a> 
+                        <a href="#"><img src="{{ url_for('static', filename='images/instagram_icon.png') }}" alt="Instagram"></a> 
+                        <a href="#"><img src="{{ url_for('static', filename='images/twitter_icon.png') }}" alt="Twitter"></a> 
+                    </div> 
+                </div> 
+            </div> 
+            <div class="footer-bottom"> 
+                &copy; 2025 Allana Joias. Todos os direitos reservados. 
+            </div> 
+        </div> 
+    </footer> 
+
+    <div class="mobile-nav-overlay"></div> <script src="{{ url_for('static', filename='js/main.js') }}"></script> 
+</body> 
+</html>

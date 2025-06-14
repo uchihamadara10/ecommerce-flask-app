@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Produtos{% endblock %}
+
+{% block content %}
+    <section class="admin-content">
+        <h2>Gerenciar Produtos</h2>
+
+        <h3>Adicionar Novo Produto</h3>
+        <form method="POST" enctype="multipart/form-data" class="product-form">
+            <label for="name">Nome do Produto:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description"></textarea>
+
+            <label for="price">Preço:</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required>
+
+            <label for="old_price">Preço Antigo (opcional):</label>
+            <input type="number" id="old_price" name="old_price" step="0.01" min="0">
+
+            <label for="installments">Parcelas (opcional):</label>
+            <input type="number" id="installments" name="installments" min="1">
+
+            <label for="stock">Estoque:</label>
+            <input type="number" id="stock" name="stock" min="0" required>
+
+            <label for="product_code">Código do Produto (opcional):</label>
+            <input type="text" id="product_code" name="product_code">
+
+            <label for="category_id">Categoria:</label>
+            <select id="category_id" name="category_id" required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="image">Imagem do Produto:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+
+            <button type="submit">Adicionar Produto</button>
+        </form>
+
+        <h3>Lista de Produtos</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Imagem</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                    <th>Estoque</th>
+                    <th>Categoria</th>
+                    <th>Código</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.id }}</td>
+                    <td>
+                        {% if product.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename) }}" alt="{{ product.name }}" width="50">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>R$ {{ "%.2f"|format(product.price) }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>{{ product.product_code or 'N/A' }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" class="button edit-button">Editar</a>
+                        <form action="{{ url_for('admin_delete_product', product_id=product.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="button delete-button" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

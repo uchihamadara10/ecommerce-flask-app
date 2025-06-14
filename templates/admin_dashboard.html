@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo{% endblock %}
+
+{% block content %}
+    <section class="admin-dashboard">
+        <h2>Bem-vindo ao Painel Administrativo, {{ logged_in_user.username }}!</h2>
+        <div class="admin-menu">
+            <ul>
+                {# O link "Gerenciar Produtos" já inclui a funcionalidade de adicionar. #}
+                {# Não é necessário um link separado "Adicionar Produto" aqui se você não quiser um. #}
+                <li><a href="{{ url_for('admin_products') }}">Gerenciar Produtos</a></li>
+                <li><a href="{{ url_for('admin_categories') }}">Gerenciar Categorias</a></li>
+                <li><a href="{{ url_for('admin_orders') }}">Gerenciar Pedidos</a></li>
+                <li><a href="{{ url_for('admin_users') }}">Gerenciar Usuários</a></li>
+                <li><a href="{{ url_for('admin_banners') }}">Gerenciar Banners</a></li>
+                <li><a href="{{ url_for('admin_revendedores') }}">Gerenciar Revendedores</a></li>
+                <li><a href="{{ url_for('admin_maletas') }}">Gerenciar Maletas</a></li>
+            </ul>
+        </div>
+        
+        <h3>Informações Rápidas</h3>
+        <div class="quick-info-cards">
+            <div class="card">
+                <h4>Total de Produtos</h4>
+                <p>{{ total_products }}</p>
+            </div>
+            <div class="card">
+                <h4>Pedidos Pendentes</h4>
+                <p>{{ pending_orders }}</p>
+            </div>
+            {# Você pode adicionar mais cards aqui, como "Novos Usuários", "Revendedores Ativos", etc. #}
+        </div>
+
+        {# Adicione aqui gráficos, relatórios ou outras informações visuais #}
+        <div class="dashboard-charts">
+            {# Ex: <img src="{{ url_for('static', filename='images/sales_chart.png') }}" alt="Gráfico de Vendas"> #}
+            <p>Seção para gráficos e relatórios (a ser implementada)</p>
+        </div>
+    </section>
+{% endblock %}

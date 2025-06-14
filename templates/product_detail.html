@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Allana Joias{% endblock %}
+
+{% block content %}
+<section class="page-section product-detail-section">
+    <div class="container product-detail-grid">
+        <div class="product-image">
+            {# Verifica se o produto é do mock_data ou do DB para pegar a imagem #}
+            {% if 'image' in product %}
+                <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" alt="{{ product.name }}">
+            {% elif product.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename) }}" alt="{{ product.name }}">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/placeholder.png') }}" alt="Imagem não disponível"> {# Adicione uma imagem placeholder #}
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <h1>{{ product.name }}</h1>
+            {% if product.old_price %}
+                <p class="old-price">De: R$ {{ "%.2f"|format(product.old_price) }}</p>
+            {% endif %}
+            <p class="current-price">Por: R$ {{ "%.2f"|format(product.price) }}</p>
+            {% if product.installments %}
+                <p class="installments">Em até {{ product.installments }}x de R$ {{ "%.2f"|format(product.price / product.installments) }} sem juros</p>
+            {% endif %}
+            <p class="product-description">{{ product.description }}</p>
+            
+            <div class="product-actions">
+                {# Aqui você adicionaria formulário para quantidade e botão adicionar ao carrinho #}
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="GET"> {# Use GET ou POST, dependendo da sua lógica de carrinho #}
+                    <input type="number" name="quantity" value="1" min="1" class="quantity-input">
+                    <button type="submit" class="button primary">Adicionar ao Carrinho <i class="fas fa-shopping-cart"></i></button>
+                </form>
+                <button class="button secondary"><i class="fas fa-heart"></i> Adicionar aos Favoritos</button>
+            </div>
+            
+            {% if product.product_code %}
+                <p class="product-code">Código do Produto: {{ product.product_code }}</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

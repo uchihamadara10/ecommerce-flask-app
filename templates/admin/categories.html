@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Categorias{% endblock %}
+
+{% block content %}
+    <section class="admin-content">
+        <h2>Gerenciar Categorias</h2>
+
+        <h3>Adicionar Nova Categoria</h3>
+        <form method="POST" action="{{ url_for('admin_add_category') }}" class="category-form"> {# Você precisará criar a rota admin_add_category #}
+            <label for="name">Nome da Categoria:</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">Adicionar Categoria</button>
+        </form>
+
+        <h3>Lista de Categorias</h3>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %} {# Você precisará passar 'categories' para esta template #}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin_edit_category', category_id=category.id) }}" class="button edit-button">Editar</a> {# Você precisará criar a rota admin_edit_category #}
+                        <form action="{{ url_for('admin_delete_category', category_id=category.id) }}" method="POST" style="display:inline;"> {# Você precisará criar a rota admin_delete_category #}
+                            <button type="submit" class="button delete-button" onclick="return confirm('Tem certeza que deseja excluir esta categoria? Isso pode afetar produtos!');">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

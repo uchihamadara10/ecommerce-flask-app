@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Produto{% endblock %}
+
+{% block content %}
+    <section class="admin-content">
+        <h2>Editar Produto: {{ product.name }}</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="product-form">
+            <label for="name">Nome do Produto:</label>
+            <input type="text" id="name" name="name" value="{{ product.name }}" required>
+
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description">{{ product.description }}</textarea>
+
+            <label for="price">Preço:</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" value="{{ product.price }}" required>
+
+            <label for="old_price">Preço Antigo (opcional):</label>
+            <input type="number" id="old_price" name="old_price" step="0.01" min="0" value="{{ product.old_price or '' }}">
+
+            <label for="installments">Parcelas (opcional):</label>
+            <input type="number" id="installments" name="installments" min="1" value="{{ product.installments or '' }}">
+
+            <label for="stock">Estoque:</label>
+            <input type="number" id="stock" name="stock" min="0" value="{{ product.stock }}" required>
+
+            <label for="product_code">Código do Produto (opcional):</label>
+            <input type="text" id="product_code" name="product_code" value="{{ product.product_code or '' }}">
+
+            <label for="category_id">Categoria:</label>
+            <select id="category_id" name="category_id" required>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="image">Imagem Atual:</label>
+            {% if product.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename) }}" alt="{{ product.name }}" width="150px">
+                <p>Mantenha em branco para não alterar a imagem.</p>
+            {% else %}
+                <p>Nenhuma imagem atual.</p>
+            {% endif %}
+            <label for="image">Nova Imagem do Produto (opcional):</label>
+            <input type="file" id="image" name="image" accept="image/*">
+
+            <button type="submit">Atualizar Produto</button>
+            <a href="{{ url_for('admin_products') }}" class="button back-button">Voltar para Produtos</a>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+*.env
+.flaskenv
+
+# Flask
+.webassets-cache/
+/uploads/        # Onde suas imagens de upload são salvas. Melhor não versionar todas.
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log

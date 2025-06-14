@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Favoritos{% endblock %}
+
+{% block content %}
+    <section class="page-content">
+        <h1>Meus Produtos Favoritos</h1>
+        <p>A página de favoritos ainda está sendo construída! Marque seus produtos preferidos e os encontre facilmente aqui.</p>
+        {# Aqui você adicionaria a lógica para exibir os produtos favoritos do usuário #}
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="{{ url_for('static', filename='uploads/products/brinco_perola.jpeg') }}" alt="Brinco Pérola">
+                <h3>Brinco Pérola</h3>
+                <p class="price">R$ 350,00</p>
+                <button class="buy-button">Comprar</button>
+                <button class="remove-favorite">Remover dos Favoritos</button>
+            </div>
+            </div>
+    </section>
+{% endblock %}

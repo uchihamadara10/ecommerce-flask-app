@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Contato - Allana Joias{% endblock %}
+
+{% block content %}
+<section class="page-section contact-section">
+    <div class="container">
+        <h1>Entre em Contato</h1>
+        <p>Tem alguma dúvida, sugestão ou precisa de ajuda? Entre em contato conosco! Nossa equipe está pronta para atendê-lo.</p>
+        
+        <div class="contact-info">
+            <p><i class="fas fa-envelope"></i> Email: contato@allanajoias.com</p>
+            <p><i class="fas fa-phone-alt"></i> Telefone: (XX) XXXX-XXXX</p>
+            <p><i class="fas fa-map-marker-alt"></i> Endereço: Rua do Luxo, 123 - Centro, Juquitiba - SP</p>
+        </div>
+
+        <div class="contact-form-container">
+            <h2>Envie-nos uma Mensagem</h2>
+            <form action="#" method="POST" class="contact-form"> {# Ação pode ser definida posteriormente no app.py para envio de formulário #}
+                <div class="form-group">
+                    <label for="name">Seu Nome:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Seu Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Assunto:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Sua Mensagem:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="button primary">Enviar Mensagem</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

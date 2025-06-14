@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Produtos - Allana Joias{% endblock %}
+
+{% block content %}
+<div class="container admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h2 class="sidebar-title">Administração</h2>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}"><i class="fas fa-plus-circle"></i> Adicionar Produto</a></li>
+            <li><a href="{{ url_for('view_products') }}" class="active"><i class="fas fa-gem"></i> Gerenciar Produtos</a></li>
+            <li><a href="{{ url_for('add_category') }}"><i class="fas fa-folder-plus"></i> Adicionar Categoria</a></li>
+            <li><a href="{{ url_for('view_categories') }}"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
+            <li><a href="{{ url_for('view_orders') }}"><i class="fas fa-shopping-bag"></i> Gerenciar Pedidos</a></li>
+            <li><a href="{{ url_for('view_users') }}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <div class="admin-content">
+        <h1 class="page-title">Gerenciar Produtos</h1>
+        <a href="{{ url_for('add_product') }}" class="button primary add-new-button"><i class="fas fa-plus"></i> Adicionar Novo Produto</a>
+
+        {% if products %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagem</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Destaque</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{ product.id }}</td>
+                            <td>
+                                {% if product.image %}
+                                    <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" alt="{{ product.name }}" class="table-img-thumbnail">
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.category.name if product.category else 'Sem Categoria' }}</td> {# Assume que produto tem uma relação com categoria #}
+                            <td>R$ {{ "%.2f"|format(product.price) | replace('.', ',') }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>
+                                {% if product.is_featured %}
+                                    <i class="fas fa-check-circle success-icon"></i> Sim
+                                {% else %}
+                                    <i class="fas fa-times-circle danger-icon"></i> Não
+                                {% endif %}
+                            </td>
+                            <td class="actions-column">
+                                <a href="{{ url_for('edit_product', product_id=product.id) }}" class="action-button edit-button" title="Editar"><i class="fas fa-edit"></i></a>
+                                <form action="{{ url_for('delete_product', product_id=product.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este produto?');">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"> {# Se usar Flask-WTF #}
+                                    <button type="submit" class="action-button delete-button" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="no-records-message">Nenhum produto cadastrado ainda.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Categoria - Allana Joias{% endblock %}
+
+{% block content %}
+<div class="container admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h2 class="sidebar-title">Administração</h2>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}"><i class="fas fa-plus-circle"></i> Adicionar Produto</a></li>
+            <li><a href="{{ url_for('view_products') }}"><i class="fas fa-gem"></i> Gerenciar Produtos</a></li>
+            <li><a href="{{ url_for('add_category') }}"><i class="fas fa-folder-plus"></i> Adicionar Categoria</a></li>
+            <li><a href="{{ url_for('view_categories') }}" class="active"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
+            <li><a href="{{ url_for('view_orders') }}"><i class="fas fa-shopping-bag"></i> Gerenciar Pedidos</a></li>
+            <li><a href="{{ url_for('view_users') }}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <div class="admin-content">
+        <h1 class="page-title">Editar Categoria</h1>
+        <div class="form-card admin-form-card">
+            <form method="POST" action="{{ url_for('edit_category', category_id=category.id) }}">
+                {{ form.csrf_token }} {# Proteção CSRF #}
+
+                <div class="form-group">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-input", value=category.name) }} {# Preenche o campo com o nome atual #}
+                    {% if form.name.errors %}
+                        <ul class="errors">{% for error in form.name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="button primary form-submit-button">Salvar Alterações</button>
+                <a href="{{ url_for('view_categories') }}" class="button secondary cancel-button">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

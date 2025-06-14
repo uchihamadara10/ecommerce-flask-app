@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Adicionar Produto - Allana Joias{% endblock %}
+
+{% block content %}
+<div class="container admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h2 class="sidebar-title">Administração</h2>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}" class="active"><i class="fas fa-plus-circle"></i> Adicionar Produto</a></li>
+            <li><a href="{{ url_for('view_products') }}"><i class="fas fa-gem"></i> Gerenciar Produtos</a></li>
+            <li><a href="{{ url_for('add_category') }}"><i class="fas fa-folder-plus"></i> Adicionar Categoria</a></li>
+            <li><a href="{{ url_for('view_categories') }}"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
+            <li><a href="{{ url_for('view_orders') }}"><i class="fas fa-shopping-bag"></i> Gerenciar Pedidos</a></li>
+            <li><a href="{{ url_for('view_users') }}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <div class="admin-content">
+        <h1 class="page-title">Adicionar Novo Produto</h1>
+        <div class="form-card admin-form-card">
+            <form method="POST" action="{{ url_for('add_product') }}" enctype="multipart/form-data">
+                {{ form.csrf_token }} {# Proteção CSRF #}
+
+                <div class="form-group">
+                    {{ form.name.label(class="form-label") }}
+                    {{ form.name(class="form-input", placeholder="Nome do Produto") }}
+                    {% if form.name.errors %}
+                        <ul class="errors">{% for error in form.name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.description.label(class="form-label") }}
+                    {{ form.description(class="form-textarea", placeholder="Descrição detalhada do produto") }}
+                    {% if form.description.errors %}
+                        <ul class="errors">{% for error in form.description.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.price.label(class="form-label") }}
+                    {{ form.price(class="form-input", placeholder="0.00") }}
+                    {% if form.price.errors %}
+                        <ul class="errors">{% for error in form.price.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.old_price.label(class="form-label") }}
+                    {{ form.old_price(class="form-input", placeholder="0.00 (opcional)") }}
+                    {% if form.old_price.errors %}
+                        <ul class="errors">{% for error in form.old_price.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.stock.label(class="form-label") }}
+                    {{ form.stock(class="form-input", placeholder="Quantidade em estoque") }}
+                    {% if form.stock.errors %}
+                        <ul class="errors">{% for error in form.stock.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form.category.label(class="form-label") }}
+                    {{ form.category(class="form-select") }}
+                    {% if form.category.errors %}
+                        <ul class="errors">{% for error in form.category.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group file-upload-group">
+                    {{ form.image.label(class="form-label") }}
+                    {{ form.image(class="form-file-input") }}
+                    {% if form.image.errors %}
+                        <ul class="errors">{% for error in form.image.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group file-upload-group">
+                    {{ form.image_hover.label(class="form-label") }}
+                    {{ form.image_hover(class="form-file-input") }}
+                    {% if form.image_hover.errors %}
+                        <ul class="errors">{% for error in form.image_hover.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group checkbox-group">
+                    {{ form.is_featured(class="form-checkbox") }}
+                    {{ form.is_featured.label(class="form-checkbox-label") }}
+                </div>
+
+                <div class="form-group">
+                    {{ form.installments.label(class="form-label") }}
+                    {{ form.installments(class="form-input", placeholder="Número de parcelas (opcional)") }}
+                    {% if form.installments.errors %}
+                        <ul class="errors">{% for error in form.installments.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="button primary form-submit-button">Adicionar Produto</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

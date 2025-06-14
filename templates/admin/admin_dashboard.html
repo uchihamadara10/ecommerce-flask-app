@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Administrativo - Allana Joias{% endblock %}
+
+{% block content %}
+<div class="container admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h2 class="sidebar-title">Administração</h2>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}" class="{% if request.endpoint == 'add_product' %}active{% endif %}"><i class="fas fa-plus-circle"></i> Adicionar Produto</a></li>
+            <li><a href="{{ url_for('view_products') }}" class="{% if request.endpoint == 'view_products' %}active{% endif %}"><i class="fas fa-gem"></i> Gerenciar Produtos</a></li>
+            <li><a href="{{ url_for('add_category') }}" class="{% if request.endpoint == 'add_category' %}active{% endif %}"><i class="fas fa-folder-plus"></i> Adicionar Categoria</a></li>
+            <li><a href="{{ url_for('view_categories') }}" class="{% if request.endpoint == 'view_categories' %}active{% endif %}"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
+            <li><a href="{{ url_for('view_orders') }}" class="{% if request.endpoint == 'view_orders' %}active{% endif %}"><i class="fas fa-shopping-bag"></i> Gerenciar Pedidos</a></li>
+            <li><a href="{{ url_for('view_users') }}" class="{% if request.endpoint == 'view_users' %}active{% endif %}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+            {# Adicione outros links de administração conforme necessário #}
+            <li><a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <div class="admin-content">
+        <h1 class="page-title">Bem-vindo ao Painel Administrativo</h1>
+        <p>Utilize o menu lateral para navegar pelas opções de administração da loja.</p>
+
+        <div class="dashboard-stats-grid">
+            <div class="stat-card">
+                <h3>Total de Produtos</h3>
+                <p>{{ total_products }}</p> {# Variável que você passaria do Flask #}
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Pedidos Pendentes</h3>
+                <p>{{ pending_orders }}</p> {# Variável que você passaria do Flask #}
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-card">
+                <h3>Novos Usuários (Mês)</h3>
+                <p>{{ new_users_month }}</p> {# Variável que você passaria do Flask #}
+                <i class="fas fa-user-plus"></i>
+            </div>
+            {# Adicione mais cards de estatísticas conforme sua necessidade #}
+        </div>
+
+        {# Pode adicionar gráficos ou outras informações relevantes aqui #}
+    </div>
+</div>
+{% endblock %}

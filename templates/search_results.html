@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados da Busca{% endblock %}
+
+{% block content %}
+    <section class="search-results">
+        <h1>Resultados da Busca para "{{ query or '' }}"</h1>
+        {% if products %}
+            <div class="product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}">
+                        {% if product.image_filename %}
+                            <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename) }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/products/default.jpg') }}" alt="{{ product.name }}">
+                        {% endif %}
+                        <h3>{{ product.name }}</h3>
+                        {% if product.old_price %}
+                            <p class="old-price">R$ {{ "%.2f"|format(product.old_price) }}</p>
+                        {% endif %}
+                        <p class="price">R$ {{ "%.2f"|format(product.price) }}</p>
+                        {% if product.installments %}
+                            <p class="installments">ou {{ product.installments }}x de R$ {{ "%.2f"|format(product.price / product.installments) }}</p>
+                        {% endif %}
+                    </a>
+                    <button class="buy-button">Comprar</button>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Nenhum produto encontrado para a sua busca.</p>
+        {% endif %}
+        <p><a href="{{ url_for('products_list') }}">Ver todos os produtos</a></p>
+    </section>
+{% endblock %}

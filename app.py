@@ -318,27 +318,27 @@ def logout():
 
 # Rota para cadastrar o primeiro CEO/Admin (REMOVER EM PRODUÇÃO!)
 # COMENTE OU REMOVA ESTA ROTA DEPOIS DE CADASTRAR O CEO PELA PRIMEIRA VEZ!
-#@app.route('/register_admin_init')#
-#def register_admin_init():
-    #if User.query.filter_by(role='ceo').first():
-      #  flash('Já existe um usuário CEO. Não é possível cadastrar outro por esta rota.', 'warning')
-     #   return redirect(url_for('index'))
+@app.route('/register_admin_init')#
+def register_admin_init():
+    if User.query.filter_by(role='ceo').first():
+        flash('Já existe um usuário CEO. Não é possível cadastrar outro por esta rota.', 'warning')
+        return redirect(url_for('index'))
 
-    #new_ceo = User(username='admin', role='ceo')
+    new_ceo = User(username='admin', role='ceo')
     # === MUDE A SENHA ABAIXO PARA UMA SENHA FORTE E QUE VOCÊ VAI LEMBRAR! ===
-    #new_ceo.set_password("suasenhaforte") # <-- MUDE AQUI PARA UMA SENHA REAL!
-   # db.session.add(new_ceo)
-  #  db.session.commit()
+    new_ceo.set_password("suasenhaforte") # <-- MUDE AQUI PARA UMA SENHA REAL!
+    db.session.add(new_ceo)
+    db.session.commit()
  
- #   flash('Usuário CEO "ceo" criado com a senha definida no app.py! Remova a rota /register_admin_init em produção.', 'success')
-#    return redirect(url_for('login'))
+    flash('Usuário CEO "ceo" criado com a senha definida no app.py! Remova a rota /register_admin_init em produção.', 'success')
+    return redirect(url_for('login'))
 
 # --- Rotas do Painel Administrativo ---
 @app.route('/admin')
 def admin_dashboard():
     if 'user_id' not in session or (session['user_role'] not in ['admin', 'ceo']):
         flash('Acesso não autorizado.', 'danger')
-    return render_template('admin/dashboard.html')
+    return render_template('admin/admin_dashboard.html')
 
 @app.route('/admin/products', methods=['GET', 'POST'])
 def admin_products():

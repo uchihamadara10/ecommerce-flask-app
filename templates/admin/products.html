@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Produtos - Admin{% endblock %}
+
+{% block content %}
+<section class="admin-panel">
+    <h2>Gerenciar Produtos</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {# Formulário para Adicionar Novo Produto #}
+    <h3>Adicionar Novo Produto</h3>
+    <form method="POST" action="{{ url_for('admin_products') }}" enctype="multipart/form-data" class="product-form">
+        <div class="form-group">
+            <label for="name">Nome do Produto:</label>
+            <input type="text" id="name" name="name" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description" rows="4" class="form-input"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">Preço (R$):</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="old_price">Preço Antigo (Opcional, para promoção R$):</label>
+            <input type="number" id="old_price" name="old_price" step="0.01" min="0" class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="installments">Parcelas (Opcional):</label>
+            <input type="number" id="installments" name="installments" min="1" class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="product_code">Código do Produto (Opcional, Único):</label>
+            <input type="text" id="product_code" name="product_code" class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="stock">Estoque:</label>
+            <input type="number" id="stock" name="stock" min="0" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="category_id">Categoria:</label>
+            <select id="category_id" name="category_id" required class="form-input">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="image">Imagem do Produto:</label>
+            <input type="file" id="image" name="image" accept="image/*" class="form-input-file">
+        </div>
+        <button type="submit" class="button primary">Adicionar Produto</button>
+    </form>
+
+    <hr>
+
+    {# Lista de Produtos Existentes #}
+    <h3>Produtos Cadastrados</h3>
+    {% if products %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th>Categoria</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>
+                    {% if product.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename) }}" alt="{{ product.name }}" width="50">
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ product.name }}</td>
+                <td>R$ {{ "%.2f"|format(product.price) }}</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.category.name if product.category else 'N/A' }}</td>
+                <td>
+                    <a href="{{ url_for('admin_edit_product', product_id=product.id) }}" class="button secondary small">Editar</a>
+                    <form action="{{ url_for('admin_delete_product', product_id=product.id) }}" method="POST" style="display:inline-block;">
+                        <button type="submit" class="button danger small" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Nenhum produto cadastrado ainda.</p>
+    {% endif %}
+</section>
+{% endblock %}

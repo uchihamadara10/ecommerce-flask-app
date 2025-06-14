@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Carrinho - Allana Joias{% endblock %}
+
+{% block content %}
+<section class="page-section cart-section">
+    <div class="container">
+        <h1>Seu Carrinho de Compras</h1>
+        <p>Seu carrinho está vazio.</p> {# Lógica para exibir itens do carrinho será adicionada aqui futuramente #}
+        <a href="{{ url_for('products_list') }}" class="button primary">Continuar Comprando</a>
+    </div>
+</section>
+{% endblock %}

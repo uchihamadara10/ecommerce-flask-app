@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Pedidos - Allana Joias{% endblock %}
+
+{% block content %}
+<div class="container admin-dashboard-container">
+    <aside class="admin-sidebar">
+        <h2 class="sidebar-title">Administração</h2>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('add_product') }}"><i class="fas fa-plus-circle"></i> Adicionar Produto</a></li>
+            <li><a href="{{ url_for('view_products') }}"><i class="fas fa-gem"></i> Gerenciar Produtos</a></li>
+            <li><a href="{{ url_for('add_category') }}"><i class="fas fa-folder-plus"></i> Adicionar Categoria</a></li>
+            <li><a href="{{ url_for('view_categories') }}"><i class="fas fa-list"></i> Gerenciar Categorias</a></li>
+            <li><a href="{{ url_for('view_orders') }}" class="active"><i class="fas fa-shopping-bag"></i> Gerenciar Pedidos</a></li>
+            <li><a href="{{ url_for('view_users') }}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+        </ul>
+    </aside>
+
+    <div class="admin-content">
+        <h1 class="page-title">Gerenciar Pedidos</h1>
+
+        {% if orders %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID do Pedido</th>
+                            <th>Cliente</th>
+                            <th>Data</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.user.username if order.user else 'Usuário Removido' }}</td> {# Assume que pedido tem uma relação com usuário #}
+                            <td>{{ order.order_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                            <td>R$ {{ "%.2f"|format(order.total_amount) | replace('.', ',') }}</td>
+                            <td><span class="order-status order-status-{{ order.status | lower | replace(' ', '-') }}">{{ order.status }}</span></td>
+                            <td class="actions-column">
+                                <a href="{{ url_for('order_detail', order_id=order.id) }}" class="action-button view-button" title="Ver Detalhes"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url_for('edit_order_status', order_id=order.id) }}" class="action-button edit-button" title="Alterar Status"><i class="fas fa-cog"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="no-records-message">Nenhum pedido encontrado.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

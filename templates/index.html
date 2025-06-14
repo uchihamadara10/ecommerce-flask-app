@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <section class="hero-slider">
+        {# Primeiro Slide #}
+        <div class="slide active" style="background-image: url('{{ url_for('static', filename='uploads/banners/colar.png') }}');">
+            <div class="slide-content">
+                <h2>Descubra a Beleza que te Define</h2>
+                <p>Nossa coleção exclusiva de joias para celebrar cada momento.</p>
+                <a href="{{ url_for('products_list') }}" class="button primary">Ver Produtos</a>
+            </div>
+        </div>
+        {# Segundo Slide #}
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='uploads/banners/banner_elegancia.png') }}');">
+            <div class="slide-content">
+                <h2>Elegância e Sofisticação</h2>
+                <p>Joias criadas com paixão e precisão, pensando em você.</p>
+                <a href="{{ url_for('products_list') }}" class="button primary">Explorar Coleção</a>
+            </div>
+        </div>
+        {# Terceiro Slide #}
+        <div class="slide" style="background-image: url('{{ url_for('static', filename='uploads/banners/banner_maes.jpeg') }}');">
+            <div class="slide-content"> 
+                <h2>Brilhe em Cada Detalhe</h2>
+                <p>Promoções mães.</p>
+                <a href="{{ url_for('products_list') }}" class="button primary">Comprar Agora</a>
+            </div>
+        </div>
+
+        {# Pontos de Navegação do Slider #}
+        <div class="slider-dots">
+            <span class="dot active" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="products-section">
+            <h2 class="section-title">Nossos Destaques</h2>
+            <div class="product-grid">
+                {% for product in products %}
+                    <div class="product-card">
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-image-link">
+                            <img src="{{ url_for('static', filename='uploads/products/' + product.image) }}" alt="{{ product.name }}" class="product-main-image">
+                            {# Adiciona a imagem de hover APENAS se ela existir #}
+                            {% if product.image_filename_hover %}
+                                <img src="{{ url_for('static', filename='uploads/products/' + product.image_filename_hover) }}" alt="{{ product.name }} - Hover" class="product-hover-image">
+                            {% endif %}
+                        </a>
+                        <div class="product-info">
+                            <h3>{{ product.name }}</h3>
+                            <div class="prices">
+                                {% if product.old_price %}
+                                    <p class="old-price">R$ {{ "%.2f"|format(product.old_price) | replace('.', ',') }}</p>
+                                {% endif %}
+                                <p class="current-price">R$ {{ "%.2f"|format(product.price) | replace('.', ',') }}</p>
+                                {% if product.installments and product.installments > 1 %}
+                                    <p class="installments">ou {{ product.installments }}x de R$ {{ "%.2f"|format(product.price / product.installments) | replace('.', ',') }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="product-actions">
+                                <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="button primary buy-button">Comprar</a>
+                                <button class="add-to-cart-icon-button">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="no-products-message">Nenhum produto em destaque no momento.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- JavaScript para o Hero Slider ---
+        let slideIndex = 1;
+        let slideInterval; 
+
+        function startAutoSlide() {
+            slideInterval = setInterval(function() {
+                showSlides(slideIndex += 1);
+            }, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        showSlides(slideIndex);
+        startAutoSlide(); // Inicia o slider automaticamente ao carregar
+
+        function currentSlide(n) {
+            stopAutoSlide(); // Para o slide automático ao clicar nos pontos
+            showSlides(slideIndex = n);
+            startAutoSlide(); // Reinicia o slide automático
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.opacity = "0";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex-1].style.opacity = "1";
+            dots[slideIndex-1].className += " active";
+        }
+
+        // Detecta se é um dispositivo touch
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+
+        // Se NÃO for um dispositivo touch, adiciona os event listeners de mouse para pausar no hover
+        if (!isTouchDevice) {
+            document.querySelector('.hero-slider').addEventListener('mouseenter', stopAutoSlide);
+            document.querySelector('.hero-slider').addEventListener('mouseleave', startAutoSlide);
+        }
+
+        // --- JavaScript para o Slider de Imagens nos Cards de Produto (apenas mobile) ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const productCards = document.querySelectorAll('.product-card');
+
+            if (isTouchDevice) { // Aplica a lógica apenas para dispositivos touch
+                productCards.forEach(card => {
+                    const mainImage = card.querySelector('.product-main-image');
+                    const hoverImage = card.querySelector('.product-hover-image');
+
+                    if (mainImage && hoverImage) { // Garante que ambas as imagens existem
+                        let isHovered = false; // Flag para controlar qual imagem está visível
+                        let autoSlideInterval;
+
+                        // Função para iniciar a troca automática
+                        function startCardAutoSlide() {
+                            // Limpa qualquer intervalo anterior para evitar duplicação
+                            clearInterval(autoSlideInterval); 
+                            autoSlideInterval = setInterval(() => {
+                                if (isHovered) {
+                                    mainImage.style.opacity = '1';
+                                    hoverImage.style.opacity = '0';
+                                } else {
+                                    mainImage.style.opacity = '0';
+                                    hoverImage.style.opacity = '1';
+                                }
+                                isHovered = !isHovered; // Alterna a flag
+                            }, 3000); // Troca a cada 3 segundos
+                        }
+
+                        // Inicia a troca automática quando o card entra na viewport
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    // Se o card está visível, inicia ou garante que o slide está rodando
+                                    startCardAutoSlide();
+                                } else {
+                                    // Se o card saiu da tela, para o slide para economizar recursos
+                                    clearInterval(autoSlideInterval);
+                                }
+                            });
+                        }, { threshold: 0.5 }); // Dispara quando 50% do card está visível
+
+                        observer.observe(card);
+
+                        // Opcional: Adicionar um evento de clique para permitir ao usuário "pular" a imagem
+                        card.addEventListener('click', function(event) {
+                            if (event.target.closest('.product-image-link')) { // Apenas se clicou na imagem
+                                clearInterval(autoSlideInterval); // Para a troca automática
+                                if (mainImage.style.opacity === '1') {
+                                    mainImage.style.opacity = '0';
+                                    hoverImage.style.opacity = '1';
+                                } else {
+                                    mainImage.style.opacity = '1';
+                                    hoverImage.style.opacity = '0';
+                                }
+                                isHovered = !isHovered;
+                                // Reinicia o slide após um curto período para permitir que o usuário veja
+                                setTimeout(startCardAutoSlide, 5000); 
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+{% endblock %}
